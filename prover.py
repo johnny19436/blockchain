@@ -57,11 +57,8 @@ def gen_merkle_proof(leaves, pos):
     # initialize a list that will contain the hashes in the proof
     path = []
 
-    # position on current level
-    level_pos = pos
-
-    # hash values of current level
-    level_state = state
+    level_pos = pos     # position on current level
+    level_state = state     # hash values of current level
 
     for level in range(height):
 
@@ -72,15 +69,17 @@ def gen_merkle_proof(leaves, pos):
         path.append(level_state[sibling_pos])
 
         for p in range(2**(height-level)):      # node length = 2**(height-level)
-            if(p % 2 == 1):     # only generate next level hash valus with left node
+            
+            # only generate next level hash valus with left node
+            if(p % 2 == 1):
                 continue
             else:
                 parent_pos = p // 2
                 state_temp.append(hash_internal_node(level_state[p], level_state[p+1]))
-                #state_temp[parent_pos] = hash_internal_node(level_state[p], level_state[p+1])
         
-        level_state = state_temp     # update hash values
-        level_pos = level_pos // 2     # update current position
+        # update hash values and current position
+        level_state = state_temp     
+        level_pos = level_pos // 2     
 
     # return a list of hashes that makes up the Merkle proof
     return path
